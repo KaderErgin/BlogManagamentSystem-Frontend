@@ -3,7 +3,6 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { MainComponent } from './shared/components/main/main.component';
-import { CommunicationService } from './services/communication.service';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -16,10 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class AppComponent {
   title = 'BlogManagement';
-  constructor(private communicationService: CommunicationService) {}
+  
 
-    onMaterialTypeSelected(type: string) {
-        this.communicationService.setMaterialType(type);
-    }
+  
 };
 

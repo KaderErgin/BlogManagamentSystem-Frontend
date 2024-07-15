@@ -3,7 +3,6 @@
   
     <!-- Yeni Blog Gönderisi Ekleme Bölümü -->
     <div class=" p-5 bg-white rounded-lg shadow-secondary-1 dark:bg-surface-dark dark:text-white max-w-full sm:max-w-lg">
-      <!-- <h3 class="text-xl font-semibold mb-4">Yeni Blog Gönderisi Ekle</h3> -->
       <button class="bg-blue-500 text-white px-4 py-2 rounded mb-2" (click)="toggleAddBlogPostForm()">Yeni Blog Gönderisi Ekle</button>
       <div *ngIf="addBlogPostFormOpen">
         <input #titleInput placeholder="Başlık" class="border p-2 w-full mb-2" />
@@ -27,8 +26,6 @@
 
         <!-- Yazı kısmı -->
         <div class="p-8 flex-grow">
-          
-          
           <h5 class="mb-4 text-2xl font-semibold leading-tight">{{ blogPost.title }}</h5>
           <div class="mb-6 text-lg">
             <div class="text-lg">
@@ -69,14 +66,7 @@
             class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="addComment(blogPost?.id, commentInput.value)">
             Ekle
-          </button>
-          
-   
-          
-          
-          
-      
-          
+          </button> 
           </div>
           
           

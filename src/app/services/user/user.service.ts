@@ -24,10 +24,10 @@ export class UserService {
   headers = { Authorization: `Bearer ${this.token}` };
 
   getUser() {
-    return this.http.get<{ id: string, firstName: string, lastName: string, email: string, phoneNumber: string }>(this.apiUrl + `/api/Users/${this.nameIdentifier}`);
+    return this.http.get<{ id: string, firstName: string, lastName: string, email: string }>(this.apiUrl + `/api/Users/${this.nameIdentifier}`);
   }
   getUser2(id:string) {
-    return this.http.get<{ id: string, firstName: string, lastName: string, email: string, phoneNumber: string }>(this.apiUrl + `/api/Users/${id}`);
+    return this.http.get<{ id: string, firstName: string, lastName: string, email: string }>(this.apiUrl + `/api/Users/${id}`);
   }
   updateUser(user: IFullUser) {
     return this.http.put(this.apiUrl + "/api/Users", user);
@@ -40,7 +40,6 @@ export class UserService {
           firstName: item.firstName,
           lastName: item.lastName,
           email: item.email,
-          phoneNumber: item.phoneNumber,
           status:item.status
         }));
         return users;
