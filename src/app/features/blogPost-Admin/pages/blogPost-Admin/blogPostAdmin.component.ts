@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit,ViewChild,ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { token } from '../../../bms-token/services/constants';
@@ -7,8 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '../../../jwt-service/services/jwt.service';
 import { JwtTokenService } from '../../../../../jwttoken.service';
 import { UserService } from '../../../../services/user/user.service';
+import { BlogPost } from '../../../../models/blogPost/BlogPost';
 @Component({
-  selector: 'app-blogPostAdmin',
+  selector: 'app-blogPost',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './blogPostAdmin.component.html',
@@ -24,6 +25,10 @@ export class BlogPostAdminComponent implements OnInit {
   editingComment: any = null;
   commentContent: string = '';
   addBlogPostFormOpen: boolean = false;
+  allBlogPosts: any[] = []; // Tüm blog gönderilerini saklamak için yeni bir alan
+  filteredBlogPosts: BlogPost[] = []; 
+  token: string = '';
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   constructor(private httpClient: HttpClient, private tokenService: TokenService,private jwtService: JwtService,JwtTokenService:JwtTokenService, private userService: UserService) {}
 
   ngOnInit(): void {
@@ -50,10 +55,12 @@ export class BlogPostAdminComponent implements OnInit {
   
         const userId = user.id;
         const releaseDate = new Date().toISOString(); 
+
         const newBlogPostWithUserId = {
           ...newBlogPost,
           userId: userId,
           releaseDate:releaseDate,
+
         };
   
         this.httpClient.post(`http://localhost:60805/api/BlogPosts/`, newBlogPostWithUserId, { headers }).subscribe(
@@ -79,15 +86,17 @@ export class BlogPostAdminComponent implements OnInit {
   fetchBlogPost(): void {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     this.httpClient
-      .get('http://localhost:60805/api/BlogPosts?PageIndex=0&PageSize=6', { headers })
+      .get('http://localhost:60805/api/BlogPosts?PageIndex=0&PageSize=12', { headers })
       .subscribe(
         (data: any) => {
           console.log('API Yanıtı:', data);
           this.BlogPost = data.items;
+          this.filteredBlogPosts = data.items;
 
           this.BlogPost.forEach((blogPost, index) => {
             this.fetchUserDetails(blogPost.userId, index);
           });
+
 
           this.fetchComments();
         },
@@ -117,7 +126,7 @@ export class BlogPostAdminComponent implements OnInit {
 
   fetchComments(): void {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    this.httpClient.get(`http://localhost:60805/api/Comments/?PageIndex=0&PageSize=6`, { headers }).subscribe(
+    this.httpClient.get(`http://localhost:60805/api/Comments/?PageIndex=0&PageSize=20`, { headers }).subscribe(
       (response: any) => {
         console.log('Yorumlar:', response);
         const comments = response.items;
@@ -210,6 +219,7 @@ export class BlogPostAdminComponent implements OnInit {
           (data: any) => {
             console.log('Yorum Güncellendi:', data);
   
+            // Yerel olarak yorumu güncelle
             const blogPost = this.BlogPost.find(post => post.id === comment.blogPostId);
             if (blogPost) {
               const updatedComment = blogPost.comments.find((c: any) => c.id === comment.id);
@@ -218,10 +228,12 @@ export class BlogPostAdminComponent implements OnInit {
               }
             }
   
+  
             this.editingComment = null;
           },
           (error) => {
             console.error('Yorum Güncelleme Hatası:', error);
+  
           }
         );
     } else {
@@ -248,8 +260,6 @@ export class BlogPostAdminComponent implements OnInit {
       this.editingBlogPost = null;
     }
   }
-
-  
 
   addComment(blogPostId: string, commentInputValue: string): void {
     const token = this.tokenService.getToken();
@@ -286,7 +296,54 @@ export class BlogPostAdminComponent implements OnInit {
       );
     });
   }
+  searchBlogPosts(searchTerm: string): void {
+    if (!searchTerm) {
+      this.filteredBlogPosts = [...this.BlogPost];
+    } else {
+      const lowerCaseSearch = searchTerm.toLowerCase();
+      this.filteredBlogPosts = this.BlogPost.filter(post =>
+        post.title.toLowerCase().includes(lowerCaseSearch)
+      );
+    }
+  }
   
+  cancelEditComment(): void {
+    this.editingComment = null;
+  }
+  cancelEditBlogPost(): void {
+  this.editingBlogPost = null;
+  this.isEditing = false;
+}
+deleteComment(comment: any): void {
+  if (!comment) {
+    console.error('Silinecek yorum bulunamadı.');
+    return;
+  }
+
+  const token = this.tokenService.getToken();
+  if (!token) {
+    console.error('Token bulunamadı.');
+    return;
+  }
+
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  this.httpClient.delete(`http://localhost:60805/api/Comments/${comment.id}`, { headers }).subscribe(
+    () => {
+      console.log('Yorum başarıyla silindi:', comment);
+
+      // Yorumun bulunduğu blog gönderisinden yorumu kaldır
+      const blogPost = this.BlogPost.find(post => post.id === comment.blogPostId);
+      if (blogPost) {
+        blogPost.comments = blogPost.comments.filter((c: any) => c.id !== comment.id);
+      }
+    },
+    (error) => {
+      console.error('Yorum silme hatası:', error);
+    }
+  );
+}
+
   
 }
 

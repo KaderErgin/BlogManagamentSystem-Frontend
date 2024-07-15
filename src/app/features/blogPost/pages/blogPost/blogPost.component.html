@@ -1,122 +1,140 @@
 <div class="flex flex-col items-center content-start">
-  <div class="mt-8 bg-[#f5f5f5] text-black pt-5 col-span-3 flex flex-col items-center space-y-3 rounded-lg pb-20 h-screen overflow-y-auto">
-  
+  <div class="mt-8 bg-gray-100 text-gray-800 pt-5 col-span-3 flex flex-col items-center space-y-3 rounded-lg pb-20 h-screen overflow-y-auto">
+
     <!-- Yeni Blog Gönderisi Ekleme Bölümü -->
-    <div class=" p-5 bg-white rounded-lg shadow-secondary-1 dark:bg-surface-dark dark:text-white max-w-full sm:max-w-lg">
-      <button class="bg-blue-500 text-white px-4 py-2 rounded mb-2" (click)="toggleAddBlogPostForm()">Yeni Blog Gönderisi Ekle</button>
+    <div class="p-5 bg-white rounded-lg shadow-md max-w-full sm:max-w-lg">
+      <button class="bg-orange-900 hover:bg-gray-600 text-white px-4 py-2 rounded-md mb-2 transition-colors duration-300"
+        (click)="toggleAddBlogPostForm()">New Blog Post Add</button>
       <div *ngIf="addBlogPostFormOpen">
-        <input #titleInput placeholder="Başlık" class="border p-2 w-full mb-2" />
-        <textarea #contentInput placeholder="İçerik" class="border p-2 w-full mb-2"></textarea>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="addBlogPost({ title: titleInput.value, contents: contentInput.value })">Ekle</button>
+        
+        <input #titleInput placeholder="Title" class="border p-2 w-full mb-2 rounded-md" />
+        <textarea #contentInput placeholder="Content" class="border p-2 w-full mb-2 rounded-md"></textarea>
+        <button class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md transition-colors duration-300"
+          (click)="addBlogPost({ title: titleInput.value, contents: contentInput.value })">Search</button>
       </div>
     </div>
-    <div
-    class="container mx-auto pb-2 max-w-full sm:max-w-lg rounded-lg shadow-xl mb-2 transform hover:scale-110 transition duration-300 ease-in-out"
-    style="box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.03);">
-    <h1 class="text-blue-700 text-2xl font-bold text-center">BlogPost</h1>
-  </div>
+
+    <div class="container mx-auto pb-2 max-w-full sm:max-w-lg rounded-lg shadow-xl mb-2 transform hover:scale-105 transition duration-300 ease-in-out"
+      style="box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.03);">
+      <h1 class="text-gray-800 text-2xl font-bold text-center">Blog Posts</h1>
+    </div>
+
+    <div class="mt-4 w-2/3 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+      <input #searchInput type="text"
+        class="flex-grow border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 h-12 sm:w-1/4"
+        placeholder="Search term enter" />
+      <button
+        class="h-12 bg-gray-800 hover:bg-blue-900 text-white font-bold px-4 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
+        (click)="searchBlogPosts(searchInput.value)">Search</button>
+    </div>
+
     <!-- ana kısım -->
     <div (click)="clearSelection()" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
       <div *ngFor="let blogPost of BlogPost; let index = index"
-        class="card-container mx-3 mt-6 flex flex-col rounded-lg bg-white text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white sm:shrink-0 sm:grow sm:basis-0 transition-transform duration-300 ease-in-out"
-        [class.scale-115]="selectedIndex === index" [class.scale-125]="selectedIndex === index"
-        [class.lg:scale-155]="selectedIndex === index" (click)="toggleSelected($event, index)"
+        class="card-container mx-3 mt-6 flex flex-col rounded-lg bg-white text-gray-800 shadow-md sm:shrink-0 sm:grow sm:basis-0 transition-transform duration-300 ease-in-out"
+        [class.scale-105]="selectedIndex === index" (click)="toggleSelected($event, index)"
         style="display: flex; flex-direction: column; height: 100%;">
-       
 
         <!-- Yazı kısmı -->
         <div class="p-8 flex-grow">
+          <p class="text-lg">{{ blogPost.firstName }} {{ blogPost.lastName }}</p>
           <h5 class="mb-4 text-2xl font-semibold leading-tight">{{ blogPost.title }}</h5>
           <div class="mb-6 text-lg">
             <div class="text-lg">
               {{ blogPost.contents }}
-             
-              <p class="text-blue-800 pt-2 text-lg">Hour: 10.00-12-30</p>
-              <p class="text-lg">{{ blogPost.firstName }} {{ blogPost.lastName }}</p>
             </div>
           </div>
+
           <!-- Yorumlar kısmı -->
-          <div *ngFor="let comment of blogPost.comments">
+          <div *ngFor="let comment of blogPost.comments" class="mt-4">
             <div *ngIf="editingComment !== comment.id; else editCommentBlock">
               <p>{{ comment.commentContent }}</p>
               <p class="text-sm text-gray-500">{{ comment.firstName }} {{ comment.lastName }}</p>
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                (click)="editComment(comment)">Edit</button>
+              <button class="bg-blue-800 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
+              (click)="editComment(comment)">
+          <i class="fas fa-edit"></i> 
+      </button>
+      
+      <button class="ml-1 bg-gray-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
+              (click)="deleteComment(comment)">
+          <i class="fas fa-trash-alt"></i> 
+      </button>
+      
             </div>
             <ng-template #editCommentBlock>
-              <div>
-                <textarea class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              <div class="mt-4">
+                <textarea
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                   rows="3" #updatedComment>{{ comment.commentContent }}</textarea>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
+                <button
+                  class="bg-orange-800 hover:bg-green-600 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
                   (click)="updateComment(comment, updatedComment.value)">Update</button>
+                <button
+                  class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
+                  (click)="cancelEditComment()">Cancel</button>
               </div>
             </ng-template>
           </div>
+
           <div *ngIf="!editingComment">
-            <h3 class="mt-8 text-xl font-semibold">Yorum Ekle</h3>
-            <input
-              type="text"
-              #commentInput
-              class="mt-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-              placeholder="Yorumunuzu buraya girin..."
-              [value]="commentContent"
-            />
-          
-            <button
-            class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            (click)="addComment(blogPost?.id, commentInput.value)">
-            Ekle
-          </button> 
+            <h3 class="mt-8 text-xl font-semibold">Comment Add</h3>
+            <div class="flex items-center space-x-2 mt-2">
+              <input type="text" #commentInput
+                class="flex-grow border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                placeholder="Comment Here Enter" [value]="commentContent" />
+                <button class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
+                (click)="addComment(blogPost?.id, commentInput.value)">
+                Add <i class="ml-1 fas fa-comment"></i> 
+        </button>
+        
+        
+        
+
+        
+            </div>
           </div>
-          
-          
-          
-          
-          
         </div>
+
         <!-- Alt kısım -->
         <div
           class="font-bold text-blue-700 border-t-2 border-neutral-100 px-8 py-4 text-center text-surface/75 dark:border-white/10 dark:text-neutral-300">
           <i class="text-lg pr-2 fas fa-calendar-alt"></i>
           <small>{{ blogPost.releaseDate | date:'dd.MM.yyyy' }}</small>
         </div>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          (click)="editBlogPost(blogPost)">BlogContentEdit</button>
+        <button
+        class="bg-gradient-to-r from-gray-950 via-gray-800 to-orange-950 hover:from-gray-950 hover:via-gray-700 hover:to-orange-950 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
+        (click)="editBlogPost(blogPost)">
+        Blog Post Edit
+      </button>
+      
+      
+      
+      
       </div>
     </div>
   </div>
 
+  <!-- Edit Blog Post Bolumu -->
   <div *ngIf="editingBlogPost" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-    <div class="bg-white rounded-lg p-6">
-      <h2 class="text-2xl font-semibold mb-4">Edit Blog Post</h2>
+    <div class="bg-white rounded-lg p-6 w-full sm:max-w-md">
+      <h2 class="text-2xl font-semibold mb-4">Blog Gönderisini Düzenle</h2>
       <div>
-        <label class="block mt-4 text-sm font-medium text-gray-700">Contents:</label>
+        <label class="block mt-4 text-sm font-medium text-gray-700">İçerik:</label>
         <input type="text"
           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
           [value]="editingBlogPost.contents" (input)="onInputChange($event, 'contents')" />
 
-        <label class="block mt-4 text-sm font-medium text-gray-700">ID:</label>
-        <input type="text"
-          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-          [value]="editingBlogPost.id" readonly />
-
-        <label class="block mt-4 text-sm font-medium text-gray-700">User ID:</label>
-        <input type="text"
-          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-          [value]="editingBlogPost.userId" readonly />
-
-        <label class="block mt-4 text-sm font-medium text-gray-700">Title:</label>
+        <label class="block mt-4 text-sm font-medium text-gray-700">Başlık:</label>
         <input type="text" id="title" [value]="editingBlogPost?.title" (input)="onInputChange($event, 'title')" />
-
-        <label class="block mt-4 text-sm font-medium text-gray-700">Release Date:</label>
-        <input type="text"
-          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-          [value]="editingBlogPost.releaseDate" (input)="onInputChange($event, 'releaseDate')" />
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-          (click)="updateBlogPost()">Update</button>
+        <div class="mt-4 flex justify-end">
+          <button
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300"
+            (click)="updateBlogPost()">Güncelle</button>
+          <button
+            class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline transition-colors duration-300 ml-2"
+            (click)="cancelEditBlogPost()">İptal</button>
+        </div>
       </div>
-
     </div>
   </div>
 </div>

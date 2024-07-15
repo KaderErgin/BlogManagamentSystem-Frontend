@@ -16,14 +16,14 @@ export const roleGuard: CanActivateFn = (route, state) => {
   roleDatas= decodedJwt["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
   let hasRole=false;
   if(roleDatas==undefined){
-    router.navigateByUrl('/');
+    router.navigateByUrl('/*');//kullanıcın rolu eklli değilse
   }
   console.log("Data:",roleDatas)
    requiredRoles.forEach((role)=>{
     if(roleDatas.includes(role)){hasRole=true} ;
    })
    if(!hasRole){
-    router.navigateByUrl('/');
+    router.navigateByUrl('/*');//kullanıcının yetkisini kontrol edildiğinde
    }
 
   return hasRole;

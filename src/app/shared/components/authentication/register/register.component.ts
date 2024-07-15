@@ -34,7 +34,6 @@ register(){
     user:user,
     firstName: this.registerForm.value.firstname!,
     lastName: this.registerForm.value.lastname!,
-    phoneNumber: this.registerForm.value.phonenumber!,
   };
   if (this.registerForm.value.password! !== this.registerForm.value.confirmpassword!) {
     // Şifreler eşleşmiyorsa hata mesajı göster

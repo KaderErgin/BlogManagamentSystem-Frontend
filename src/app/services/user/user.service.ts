@@ -40,7 +40,6 @@ export class UserService {
           firstName: item.firstName,
           lastName: item.lastName,
           email: item.email,
-          status:item.status
         }));
         return users;
       }));

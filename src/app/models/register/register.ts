@@ -4,5 +4,4 @@ export interface IRegister {
     user:IUser;
     firstName:string;
     lastName:string;
-    phoneNumber:string;
 }

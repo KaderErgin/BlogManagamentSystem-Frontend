@@ -26,15 +26,11 @@
 
         <!-- Yazı kısmı -->
         <div class="p-8 flex-grow">
-          
-          
+          <p class="text-lg">{{ blogPost.firstName }} {{ blogPost.lastName }}</p>
           <h5 class="mb-4 text-2xl font-semibold leading-tight">{{ blogPost.title }}</h5>
           <div class="mb-6 text-lg">
             <div class="text-lg">
               {{ blogPost.contents }}
-             
-              <p class="text-blue-800 pt-2 text-lg">Hour: 10.00-12-30</p>
-              <p class="text-lg">{{ blogPost.firstName }} {{ blogPost.lastName }}</p>
             </div>
           </div>
           <!-- Yorumlar kısmı -->
@@ -63,13 +59,11 @@
               placeholder="Yorumunuzu buraya girin..."
               [value]="commentContent"
             />
-          
             <button
             class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             (click)="addComment(blogPost?.id, commentInput.value)">
             Ekle
-          </button>
-          
+          </button> 
           </div>
         </div>
         <!-- Alt kısım -->
