@@ -1,0 +1,53 @@
+<div class="w-full h-20 bg-gray-800 text-white relative top-0 z-50">
+  <div class="md:max-w-[1350px] mx-auto max-w-[768px] w-full h-full flex justify-between items-center">
+    <i class="fas fa-edit mt-1 mr-3 sm:text-2xl text-xl text-orange-600"></i>
+    <h1 class="sm:text-4xl text-2xl text-white cursor-pointer" [routerLink]="['/']">BlogNest</h1>
+    <div class="max-w-md mx-auto relative">
+      <div class="flex flex-col">
+        <form class="relative flex items-center">
+          <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+          <div class="flex items-center relative"> 
+          </div>
+        </form>
+        <ul class="flex flex-wrap items-center mb-6  text-md font-medium text-gray-200 sm:mb-0 dark:text-gray-400">
+          <li>
+              <a href="#" class="hover:underline me-4 md:me-6">HomaPage</a>
+          </li>
+          <li>
+              <a href="/blogPost" class="hover:underline mr-5">BlogPosts</a>
+          </li>
+          <li>
+            <a href="/profile" class="hover:underline">Profile</a>
+        </li>
+      </ul>
+      </div>
+    </div>
+    <!-- Kullanıcı giriş yapınca-->
+    <div *ngIf="!isLoggedIn" class="md:flex hidden lg:gap-4">
+      <button class="bg-blue-900 text-white lg:px-4 px-2 lg:py-2 py-1 rounded" [routerLink]="['/login']">
+        Sign In
+      </button>
+      <button class="bg-blue-700 text-white px-4 py-2 rounded" [routerLink]="['/register']">Register</button>
+    </div>
+    <div *ngIf="hamburgerMenuOpen" class="absolute top-[80px] w-full h-auto">
+      <div class="bg-white h-full w-full p-4 bg-opacity-100 z-50 text-black md:hidden">
+        <div *ngIf="isLoggedIn" class="text-center">
+          <h1 class="text-2xl">Account</h1>
+          <button class="bg-red-600 text-white px-4 py-2 mt-4 rounded">Sign Out</button>
+        </div>
+        <div *ngIf="!isLoggedIn" class="text-center">
+          <button class="bg-blue-900 text-white px-4 py-2 rounded" [routerLink]="['/login']">
+            Sign In
+          </button>
+          <button class="bg-blue-700 text-white px-4 py-2 ml-4 rounded" [routerLink]="['/register']">Register</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="hidden md:flex bg-blue-950 items-center justify-center">
+    <ul class="flex gap-6 text-xl">
+
+    </ul>
+  </div>
+</div>
